@@ -8,16 +8,30 @@ public class PlayerScript : MonoBehaviour
 
     private Rigidbody2D rd2d;
     public float speed;
-    public Text score;
+    public Text scoreText;
     private int scoreValue = 0;
+    public Text winText;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
         rd2d = GetComponent<Rigidbody2D>();
-        score.text = scoreValue.ToString();
-        
+
+        //scoreText.text = scoreValue.ToString();
+
+        winText.text = "";
+
+        SetScoreText();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
     }
 
     // Update is called once per frame
@@ -27,6 +41,11 @@ public class PlayerScript : MonoBehaviour
         float verMovement = Input.GetAxis("Vertical");
 
         rd2d.AddForce(new Vector2(hozMovement * speed, verMovement * speed));
+
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -34,8 +53,7 @@ public class PlayerScript : MonoBehaviour
         if(collision.collider.tag == "Coin")
         {
             scoreValue += 1;
-            score.text = scoreValue.ToString();
-
+            SetScoreText();
             Destroy(collision.collider.gameObject);
         }
     }
@@ -54,5 +72,13 @@ public class PlayerScript : MonoBehaviour
 
     }
 
+    private void SetScoreText()
+    {
+        scoreText.text = "Score:" + scoreValue.ToString();
+        if (scoreValue >= 4)
+        {
+            winText.text = "You Win! Game Created by Maria Zelaya";
+        }
+    }
 
 }
